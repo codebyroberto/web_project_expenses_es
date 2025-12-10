@@ -34,4 +34,16 @@ function calculateAverageExpense() {
       balanceColor = "green";
     }
   }
+  function calculateCategoryExpenses(category) {
+    let totalExpenses = 0;
+
+    for (let i = 0; i < expenseEntries.length; i++) {
+      const entry = expenseEntries[i];
+
+      if (entry[0] === category) {
+        totalExpenses += entry[1];
+      }
+      return total;
+    }
+  }
 }
