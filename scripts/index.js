@@ -1,3 +1,7 @@
+const addExpenseBtn = document.querySelector(".controls__add-btn");
+const expenseModal = document.querySelector("#add-expense-modal");
+const closeModalBtn = document.querySelector(".modal__close-btn");
+
 const defaultExpenses = [...expenseEntries];
 
 function saveToLocalStorage(itemName, itemValue) {
@@ -30,7 +34,39 @@ function loadFromLocalStorage() {
     saveToLocalStorage("expenseEntries", expenseEntries);
   }
 }
+const budgetInput = document.querySelector(".budget__input");
+const budgetButton = document.querySelector(".budget__set-btn");
+
+budgetButton.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  const value = parseFloat(budgetInput.value);
+
+  if (!isNaN(value) && value >= 0) {
+    budgetValue = value;
+
+    saveToLocalStorage("budgetValue", budgetValue);
+
+    updateBalanceColor();
+    setStats();
+
+    console.log("Presupuesto guardado:", budgetValue);
+  } else {
+    console.log("Por favor ingresa un número válido");
+  }
+});
 
 loadFromLocalStorage();
 updateExpensesList(expenseEntries);
 setStats();
+
+const expenseModal = document.querySelector("#add-expense-modal");
+const closeModalBtn = document.querySelector(".modal__close-btn");
+
+addExpenseBtn.addEventListener("click", () => {
+  expenseModal.classList.add("modal_opened");
+});
+
+closeModalBtn.addEventListener("click", () => {
+  expenseModal.classList.remove("modal_opened");
+});

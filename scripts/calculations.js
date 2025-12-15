@@ -43,7 +43,28 @@ function calculateAverageExpense() {
       if (entry[0] === category) {
         totalExpenses += entry[1];
       }
-      return total;
     }
+    return totalExpenses;
+  }
+  function addExpenseEntry(values) {
+    expenseEntries.push(values);
+    totalExpensesValue += values[1];
+  }
+  function calculateLargestCategory() {
+    let maxTotal = 0;
+    let maxCategory = null;
+
+    for (let i = 0; i < expenseEntries.length; i++) {
+      const entry = expenseEntries[i];
+      const category = entry[0];
+      const currentCategory = entry[0];
+      const currentTotal = calculateCategoryExpenses(currentCategory);
+
+      if (currentTotal > maxTotal) {
+        maxTotal = currentTotal;
+        maxCategory = currentCategory;
+      }
+    }
+    return maxCategory;
   }
 }
