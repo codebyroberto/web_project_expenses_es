@@ -3,68 +3,59 @@ let totalExpensesValue = 0;
 let balanceColor = "green";
 const expenseEntries = [];
 
-for (let i = 0; i < expenseEntries.length; i++) {
-  const entry = expenseEntries[i];
-  totalExpensesValue += entry[1];
+function addExpenseEntry(values) {
+  expenseEntries.push(values);
+  totalExpensesValue += parseFloat(values[1]);
 }
-function calculateBalance() {
-  budgetValue - totalExpensesValue;
-  return;
+
+function calculateCategoryExpenses(category) {
+  let sum = 0;
+  for (let i = 0; i < expenseEntries.length; i++) {
+    if (expenseEntries[i][0] === category) {
+      sum += parseFloat(expenseEntries[i][1]);
+    }
+  }
+  return sum;
 }
+
 function calculateAverageExpense() {
-  if (expenseEntries.length === 0) {
-    return 0;
-  }
+  if (expenseEntries.length === 0) return 0;
+  return totalExpensesValue / expenseEntries.length;
+}
 
-  if (totalExpensesValue === 0) {
-    return totalExpensesValue / expenseEntries.length;
-  }
-  function calculateBalance() {
-    return budgetValue - totalExpensesValue;
-  }
+function calculateBalance() {
+  return budgetValue - totalExpensesValue;
+}
 
-  function updateBalanceColor() {
-    const balance = calculateBalance();
+function calculateLargestCategory() {
+  let maxName = "Ninguna";
+  let maxVal = 0;
 
-    if (balance < 0) {
-      balanceColor = "red";
-    } else if (balance < budgetValue * 0.25) {
-      balanceColor = "orange";
-    } else {
-      balanceColor = "green";
+  const categories = [
+    "groceries",
+    "restaurants",
+    "transport",
+    "home",
+    "subscriptions",
+  ];
+
+  for (let i = 0; i < categories.length; i++) {
+    const catTotal = calculateCategoryExpenses(categories[i]);
+    if (catTotal > maxVal) {
+      maxVal = catTotal;
+      maxName = categories[i];
     }
   }
-  function calculateCategoryExpenses(category) {
-    let totalExpenses = 0;
+  return maxName;
+}
 
-    for (let i = 0; i < expenseEntries.length; i++) {
-      const entry = expenseEntries[i];
-
-      if (entry[0] === category) {
-        totalExpenses += entry[1];
-      }
-    }
-    return totalExpenses;
-  }
-  function addExpenseEntry(values) {
-    expenseEntries.push(values);
-    totalExpensesValue += values[1];
-  }
-  function calculateLargestCategory() {
-    let maxTotal = 0;
-    let maxCategory = null;
-
-    for (let i = 0; i < expenseEntries.length; i++) {
-      const entry = expenseEntries[i];
-      const category = entry[0];
-      const currentCategory = entry[0];
-      const currentTotal = calculateCategoryExpenses(currentCategory);
-
-      if (currentTotal > maxTotal) {
-        maxTotal = currentTotal;
-        maxCategory = currentCategory;
-      }
-    }
-    return maxCategory;
+function updateBalanceColor() {
+  const balance = calculateBalance();
+  if (balance < 0) {
+    balanceColor = "red";
+  } else if (balance < budgetValue * 0.25) {
+    balanceColor = "orange";
+  } else {
+    balanceColor = "green";
   }
 }

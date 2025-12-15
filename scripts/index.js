@@ -1,15 +1,3 @@
-const addExpenseBtn = document.querySelector(".controls__add-btn");
-const expenseModal = document.querySelector("#add-expense-modal");
-const closeModalBtn = document.querySelector(".modal__close-btn");
-const budgetInput = document.querySelector(".budget__input");
-const budgetButton = document.querySelector(".budget__set-btn");
-
-const expenseForm = document.querySelector("#add-expense-form");
-const expenseCategoryInput = document.querySelector("#expense-category-input");
-const expenseAmountInput = document.querySelector("#expense-amount-input");
-
-const defaultExpenses = [...expenseEntries];
-
 function saveToLocalStorage(itemName, itemValue) {
   if (Array.isArray(itemValue)) {
     itemValue = JSON.stringify(itemValue);
@@ -29,69 +17,26 @@ function loadFromLocalStorage() {
 
   if (storedExpenseEntries) {
     const parsedEntries = JSON.parse(storedExpenseEntries);
-    expenseEntries.length = 0;
-    expenseEntries.push(...parsedEntries);
 
+    expenseEntries.length = 0;
     totalExpensesValue = 0;
-    for (const expense of expenseEntries) {
-      totalExpensesValue += expense[1];
-    }
+
+    parsedEntries.forEach((entry) => {
+      if (Array.isArray(entry) && entry.length === 2) {
+        expenseEntries.push(entry);
+        totalExpensesValue += parseFloat(entry[1]);
+      }
+    });
   } else {
     saveToLocalStorage("expenseEntries", expenseEntries);
+  }
+
+  if (typeof updateExpensesList === "function") {
+    updateExpensesList(expenseEntries);
+  }
+  if (typeof setStats === "function") {
+    setStats();
   }
 }
 
-budgetButton.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  const value = parseFloat(budgetInput.value);
-
-  if (!isNaN(value) && value >= 0) {
-    budgetValue = value;
-    saveToLocalStorage("budgetValue", budgetValue);
-
-    updateBalanceColor();
-    setStats();
-
-    console.log("Presupuesto guardado:", budgetValue);
-  } else {
-    console.log("Por favor ingresa un número válido");
-  }
-});
-
-addExpenseBtn.addEventListener("click", () => {
-  expenseModal.classList.add("modal_opened");
-});
-
-closeModalBtn.addEventListener("click", () => {
-  expenseModal.classList.remove("modal_opened");
-});
-
-expenseForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  const category = expenseCategoryInput.value;
-  const amount = parseFloat(expenseAmountInput.value);
-
-  if (category && !isNaN(amount) && amount > 0) {
-    addExpenseEntry([category, amount]);
-
-    saveToLocalStorage("expenseEntries", expenseEntries);
-
-    updateExpensesList(expenseEntries);
-    setStats();
-    updateBalanceColor();
-
-    expenseModal.classList.remove("modal_opened");
-    expenseForm.reset();
-
-    console.log("Nuevo gasto agregado:", category, amount);
-  } else {
-    console.log("Datos inválidos");
-  }
-});
-
 loadFromLocalStorage();
-updateExpensesList(expenseEntries);
-setStats();
-updateBalanceColor();
