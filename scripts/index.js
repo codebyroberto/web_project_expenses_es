@@ -1,6 +1,12 @@
 const addExpenseBtn = document.querySelector(".controls__add-btn");
 const expenseModal = document.querySelector("#add-expense-modal");
 const closeModalBtn = document.querySelector(".modal__close-btn");
+const budgetInput = document.querySelector(".budget__input");
+const budgetButton = document.querySelector(".budget__set-btn");
+
+const expenseForm = document.querySelector("#add-expense-form");
+const expenseCategoryInput = document.querySelector("#expense-category-input");
+const expenseAmountInput = document.querySelector("#expense-amount-input");
 
 const defaultExpenses = [...expenseEntries];
 
@@ -34,8 +40,6 @@ function loadFromLocalStorage() {
     saveToLocalStorage("expenseEntries", expenseEntries);
   }
 }
-const budgetInput = document.querySelector(".budget__input");
-const budgetButton = document.querySelector(".budget__set-btn");
 
 budgetButton.addEventListener("click", (event) => {
   event.preventDefault();
@@ -44,7 +48,6 @@ budgetButton.addEventListener("click", (event) => {
 
   if (!isNaN(value) && value >= 0) {
     budgetValue = value;
-
     saveToLocalStorage("budgetValue", budgetValue);
 
     updateBalanceColor();
@@ -56,13 +59,6 @@ budgetButton.addEventListener("click", (event) => {
   }
 });
 
-loadFromLocalStorage();
-updateExpensesList(expenseEntries);
-setStats();
-
-const expenseModal = document.querySelector("#add-expense-modal");
-const closeModalBtn = document.querySelector(".modal__close-btn");
-
 addExpenseBtn.addEventListener("click", () => {
   expenseModal.classList.add("modal_opened");
 });
@@ -70,3 +66,32 @@ addExpenseBtn.addEventListener("click", () => {
 closeModalBtn.addEventListener("click", () => {
   expenseModal.classList.remove("modal_opened");
 });
+
+expenseForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const category = expenseCategoryInput.value;
+  const amount = parseFloat(expenseAmountInput.value);
+
+  if (category && !isNaN(amount) && amount > 0) {
+    addExpenseEntry([category, amount]);
+
+    saveToLocalStorage("expenseEntries", expenseEntries);
+
+    updateExpensesList(expenseEntries);
+    setStats();
+    updateBalanceColor();
+
+    expenseModal.classList.remove("modal_opened");
+    expenseForm.reset();
+
+    console.log("Nuevo gasto agregado:", category, amount);
+  } else {
+    console.log("Datos inválidos");
+  }
+});
+
+loadFromLocalStorage();
+updateExpensesList(expenseEntries);
+setStats();
+updateBalanceColor();
