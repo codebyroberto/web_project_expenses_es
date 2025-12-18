@@ -79,7 +79,7 @@ function createExpenseListItem(data) {
     ".expense__delete-btn"
   );
 
-  expenseCategoryElement.textContent = categoryNames[data[0]];
+  expenseCategoryElement.textContent = categoryNames[data[0]] || data[0];
   expenseValueElement.textContent = data[1].toFixed(2);
   expenseDeleteButton.addEventListener("click", () =>
     handleDeleteExpense(expenseElement, data)
@@ -122,7 +122,11 @@ function handleSaveBudget() {
 
 function updateBalanceElementColor() {
   updateBalanceColor();
-  const colorClasses = ["stats__item-value_balance_negative", "stats__item-value_balance_warning", "stats__item-value_balance_positive"];
+  const colorClasses = [
+    "stats__item-value_balance_negative",
+    "stats__item-value_balance_warning",
+    "stats__item-value_balance_positive",
+  ];
   balanceValueElement.classList.remove(...colorClasses);
 
   if (balanceColor === "red") {
@@ -136,13 +140,11 @@ function updateBalanceElementColor() {
 
 function clearLocalStorage() {
   localStorage.clear();
+
   budgetValue = 0;
   expenseEntries.length = 0;
-  expenseEntries.push(...defaultExpenses);
   totalExpensesValue = 0;
-  for (const expense of expenseEntries) {
-    totalExpensesValue += expense[1];
-  }
+
   expensesList.innerHTML = "";
   updateExpensesList(expenseEntries);
   setStats();
