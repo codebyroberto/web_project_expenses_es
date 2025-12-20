@@ -15,7 +15,6 @@ for (let i = 0; i < expenseEntries.length; i++) {
 
 function addExpenseEntry(values) {
   expenseEntries.push(values);
-
   totalExpensesValue += Number(values[1]);
 }
 

@@ -90,12 +90,21 @@ function createExpenseListItem(data) {
 
 function handleAddExpenseSubmit(evt) {
   evt.preventDefault();
+
   const selectedOption = expenseCategoryInput.selectedOptions[0];
-  const values = [selectedOption.value, Number(expenseAmountInput.value)];
+  const rawValue = selectedOption.value;
+
+  const translatedCategory = categoryNames[rawValue];
+
+  const amount = Number(expenseAmountInput.value);
+
+  const values = [translatedCategory, amount];
+
   addExpenseToList(values);
   addExpenseEntry(values);
   saveToLocalStorage("expenseEntries", expenseEntries);
   setStats();
+
   expenseAmountInput.value = "";
   closeModal();
   addExpenseModalForm.reset();
